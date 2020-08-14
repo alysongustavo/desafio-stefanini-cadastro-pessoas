@@ -4,8 +4,8 @@
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
               version="2.1">
     <application>
-
         <message-bundle>br.com.alyson.desafiostefanini.Messages</message-bundle>
+
         <locale-config>
             <default-locale>pt_BR</default-locale>
         </locale-config>

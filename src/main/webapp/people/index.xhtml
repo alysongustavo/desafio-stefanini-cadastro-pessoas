@@ -1,0 +1,99 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Listagem Pessoas</ui:define>
+
+    <ui:define name="corpo">
+        <f:metadata>
+            <f:event listener="#{consultaPeopleBean.inicializar}" type="preRenderView" />
+        </f:metadata>
+
+        <h:form id="frmPesquisa">
+
+        <h1>Listagem Pessoas</h1>
+
+        <p:messages id="msg" autoUpdate="true" closable="true" />
+
+        <p:toolbar style="margin-top: 20px">
+            <p:toolbarGroup>
+                <p:commandButton value="Pesquisar" action="#{consultaPeopleBean.filter}"
+                                 update="@form" />
+            </p:toolbarGroup>
+            <p:toolbarGroup align="right">
+                <p:button value="Novo" outcome="/people/add" />
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <p:panelGrid columns="8" id="painel" style="width: 100%; margin-top: 20px"
+                     columnClasses="rotulo, campo">
+            <p:outputLabel value="Nome" for="nome"/>
+            <p:inputText id="nome" size="30" value="#{consultaPeopleBean.peopleFilter.name}" />
+
+            <p:outputLabel value="CPF" for="cpf"/>
+            <p:inputText id="cpf" size="10" value="#{consultaPeopleBean.peopleFilter.cpf}" />
+
+            <p:outputLabel value="Sexo" for="sex"/>
+            <p:selectOneMenu id="sex" value="#{consultaPeopleBean.peopleFilter.sex}">
+                <f:selectItem itemLabel="Selecione o sexo"/>
+                <f:selectItems value="#{consultaPeopleBean.sexs}" var="sex"
+                               itemValue="#{sex}" itemLabel="#{sex}" />
+            </p:selectOneMenu>
+
+            <p:outputLabel value="Naturalidade" for="naturalness"/>
+            <p:selectOneMenu id="naturalness" value="#{consultaPeopleBean.peopleFilter.naturalness}">
+                <f:selectItem itemLabel="Selecione a naturalidade"/>
+                <f:selectItems value="#{consultaPeopleBean.cities}" var="city"
+                               itemValue="#{city}" itemLabel="#{city}" />
+            </p:selectOneMenu>
+
+        </p:panelGrid>
+
+        <p:dataTable id="peoplesTable"  value="#{consultaPeopleBean.peoplesFilter}" var="people"
+                     style="margin-top: 20px" emptyMessage="Nenhum pessoal encontrado." rows="20"
+                     paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+            <p:column headerText="Id">
+                <h:outputText value="#{people.id}" />
+            </p:column>
+
+            <p:column headerText="Nome">
+                <h:outputText value="#{people.name}" />
+            </p:column>
+
+            <p:column headerText="Sexo">
+                <h:outputText value="#{people.sex}" />
+            </p:column>
+
+            <p:column headerText="Email">
+                <h:outputText value="#{people.email}" />
+            </p:column>
+
+            <p:column style="width: 100px; text-align: center">
+                <p:button outcome="/people/edit" icon="ui-icon-pencil" title="Editar">
+                    <f:param name="people" value="#{people.id}" />
+                </p:button>
+
+                <p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+                                 process="@this" update=":frmPesquisa:confirmacaoExclusaoDialog">
+                    <f:setPropertyActionListener target="#{consultaPeopleBean.peopleSelecionado}"
+                                                 value="#{people}" />
+                </p:commandButton>
+            </p:column>
+
+        </p:dataTable>
+
+        <p:confirmDialog header="Exclusão de pessoa"
+                         message="Tem certeza que deseja excluir a seguinte pessoa #{consultaPeopleBean.peopleSelecionado.name}?"
+                         widgetVar="confirmacaoExclusao"	id="confirmacaoExclusaoDialog">
+            <p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+            <p:commandButton value="Sim" oncomplete="PF('confirmacaoExclusao').hide();"
+                             action="#{consultaPeopleBean.excluir}" process="@this"
+                             update=":frmPesquisa:peoplesTable :frmPesquisa:msg" id="yesButton" />
+        </p:confirmDialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

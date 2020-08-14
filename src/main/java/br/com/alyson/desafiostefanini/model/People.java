@@ -2,21 +2,25 @@ package br.com.alyson.desafiostefanini.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class People {
+@Table(name = "PEOPLE")
+public class People implements Serializable {
+
+    private static final long serialVersionUID = 9024448305550910580L;
 
     @Id
     @Getter @Setter
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="my_people_seq_gen")
-    @SequenceGenerator(name="my_people_seq_gen", sequenceName="SEQ_PEOPLE_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter @Setter
@@ -37,7 +41,7 @@ public class People {
 
     @Getter @Setter
     @Temporal(TemporalType.DATE)
-    @NotBlank
+    @NotNull
     private Date birthday;
 
     @Getter @Setter
@@ -50,10 +54,48 @@ public class People {
     @Size(max = 100)
     private String nationality;
 
-    @Getter @Setter
     @NotBlank
     @Size(max = 100)
     @CPF
     private String cpf;
 
+    @Getter @Setter
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_created", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateCreated;
+
+    @Getter @Setter
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_updated", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateUpdated;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf =  cpf.replaceAll("\\.","").replaceAll("\\/","").replace("-","");;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        People other = (People) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @ManagedBean(name = "peopleBean")
-@RequestScoped
+@ViewScoped
 @Component
 public class PeopleBean implements Serializable {
 
@@ -23,7 +23,7 @@ public class PeopleBean implements Serializable {
     @Autowired
     private PeopleService peopleService;
 
-    private People peopleCadastrar = null;
+    private People people;
 
     private List<String> countries;
     private List<String> cities;
@@ -33,10 +33,19 @@ public class PeopleBean implements Serializable {
     }
 
     public void inicializar() {
-        if (ApplicationUtil.isNotPostback()) {
-            carregarCities();
-            carregarCountries();
+        limpar();
+
+        carregarCities();
+        carregarCountries();
+    }
+
+    public void carregar() {
+        if (this.people == null) {
+            limpar();
         }
+
+        carregarCities();
+        carregarCountries();
     }
 
     public void carregarCities() {
@@ -56,13 +65,13 @@ public class PeopleBean implements Serializable {
     }
 
     private void limpar(){
-        this.peopleCadastrar = new People();
+        this.people = new People();
     }
 
     public void salvar(){
 
         try{
-            peopleService.salvar(this.peopleCadastrar);
+            this.people = peopleService.save(this.people);
             limpar();
 
             ApplicationUtil.addInfoMessage("Pessoa salva com sucesso");
@@ -70,14 +79,6 @@ public class PeopleBean implements Serializable {
             ApplicationUtil.addErrorMessage(exception.getMessage());
         }
 
-    }
-
-    public People getPeopleCadastrar() {
-        return peopleCadastrar;
-    }
-
-    public void setPeopleCadastrar(People peopleCadastrar) {
-        this.peopleCadastrar = peopleCadastrar;
     }
 
     public List<String> getCities() {
@@ -88,4 +89,11 @@ public class PeopleBean implements Serializable {
         return countries;
     }
 
+    public People getPeople() {
+        return people;
+    }
+
+    public void setPeople(People people) {
+        this.people = people;
+    }
 }

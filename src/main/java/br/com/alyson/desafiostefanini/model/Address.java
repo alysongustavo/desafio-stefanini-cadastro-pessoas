@@ -3,19 +3,22 @@ package br.com.alyson.desafiostefanini.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
-public class Address {
+@Table(name = "ADDRESS")
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = -6467827889068379584L;
 
     @Id
     @Getter @Setter
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="my_address_seq_gen")
-    @SequenceGenerator(name="my_address_seq_gen", sequenceName="SEQ_ADDRESS_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter @Setter
@@ -58,4 +61,26 @@ public class Address {
     @Getter @Setter
     private String complement;
 
+    @Getter @Setter
+    @Column(name = "date_created", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateCreated;
+
+    @Getter @Setter
+    @Column(name = "date_updated", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateUpdated;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address)) return false;
+
+        Address address = (Address) o;
+
+        return getId().equals(address.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

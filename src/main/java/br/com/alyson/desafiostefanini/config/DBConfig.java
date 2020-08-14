@@ -16,12 +16,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.naming.NamingException;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "br.com.alyson.desafiostefanini.repository", entityManagerFactoryRef = "entityManagerFactory")
+@EnableJpaRepositories(basePackages = "br.com.alyson.desafiostefanini.repository", enableDefaultTransactions = false)
 public class DBConfig {
 
     @Autowired
@@ -31,48 +31,36 @@ public class DBConfig {
     public DataSource dataSource() throws NamingException {
         JndiDataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
         dataSourceLookup.setResourceRef(true);
-        return dataSourceLookup.getDataSource("jdbc/oracle");
+        return dataSourceLookup.getDataSource("jdbc/h2");
     }
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        adapter.setDatabase(Database.ORACLE);
+        adapter.setDatabase(Database.H2);
         adapter.setShowSql(false);
         adapter.setGenerateDdl(false);
-        adapter.setDatabasePlatform("org.hibernate.dialect.Oracle12cDialect");
+        adapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
         return adapter;
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws NamingException {
+    public EntityManagerFactory entityManagerFactory() throws NamingException {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "br.com.alyson.desafiostefanini.model" });
         em.setJpaVendorAdapter(jpaVendorAdapter());
-        em.setJpaProperties(additionalProperties());
+        em.setPackagesToScan("br.com.alyson.desafiostefanini.model");
+        em.afterPropertiesSet();
 
-        return em;
+        return em.getObject();
     }
 
     @Bean
     public PlatformTransactionManager transactionManager() throws NamingException {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-
+        transactionManager.setEntityManagerFactory(entityManagerFactory());
         return transactionManager;
     }
 
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
-
-    Properties additionalProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle12cDialect");
-
-        return properties;
-    }
 }

@@ -11,22 +11,34 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <javax.faces.version>2.2.6</javax.faces.version>
+        <javax.faces.version>2.2.13</javax.faces.version>
+        <omnifaces.version>1.14.1</omnifaces.version>
         <primefaces.version>8.0</primefaces.version>
+        <primefaces.theme.bootstrap.version>1.0.10</primefaces.theme.bootstrap.version>
         <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
         <spring.boot.starter.web.version>2.3.2.RELEASE</spring.boot.starter.web.version>
         <spring.boot.starter.data.jpa.version>2.3.2.RELEASE</spring.boot.starter.data.jpa.version>
+        <spring.boot.starter.test.version>2.3.2.RELEASE</spring.boot.starter.test.version>
 
         <oracle.jdbc.version>18.3</oracle.jdbc.version>
+        <postgresql.version>42.2.14</postgresql.version>
+        <h2.version>1.4.199</h2.version>
+
         <cdi.api.version>2.0.SP1</cdi.api.version>
 
         <log4j.version>2.13.3</log4j.version>
+        <log4j.api.version>2.7</log4j.api.version>
         <jcl-over-slf4j.version>2.0.0-alpha1</jcl-over-slf4j.version>
         <slf4j.api.version>2.0.0-alpha1</slf4j.api.version>
         <slf4j.simple.version>2.0.0-alpha1</slf4j.simple.version>
+        <commons.logging.version>1.2</commons.logging.version>
+        <log4j.core.version>2.7</log4j.core.version>
+        <log4j.jcl.version>2.7</log4j.jcl.version>
 
         <lombok.version>1.18.12</lombok.version>
-        <hibernate.validator.version>6.0.0.Final</hibernate.validator.version>
+        <hibernate.validator.version>5.3.1.Final</hibernate.validator.version>
+
+        <commons.lang3.version>3.1</commons.lang3.version>
 
     </properties>
 
@@ -53,6 +65,20 @@
             <version>${primefaces.version}</version>
         </dependency>
 
+        <!-- OmniFaces (utilitarios para JSF) -->
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnifaces</artifactId>
+            <version>${omnifaces.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.primefaces.themes/bootstrap -->
+        <dependency>
+            <groupId>org.primefaces.themes</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${primefaces.theme.bootstrap.version}</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -74,6 +100,14 @@
             <version>${spring.boot.starter.data.jpa.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.starter.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
         <dependency>
             <groupId>com.oracle</groupId>
@@ -81,28 +115,44 @@
             <version>${oracle.jdbc.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Log4J -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.7</version>
+            <version>${log4j.api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.7</version>
+            <version>${log4j.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jcl</artifactId>
-            <version>2.7</version>
+            <version>${log4j.jcl.version}</version>
         </dependency>
 
         <!-- Commons Logging (abstrai a implementação de logging) -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <version>${commons.logging.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -110,7 +160,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
+            <version>${commons.lang3.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -124,10 +174,11 @@
 
         <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
         <dependency>
-            <groupId>org.hibernate.validator</groupId>
+            <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
         </dependency>
+
 
     </dependencies>
 
@@ -143,11 +194,15 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.1</version>
-            </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 </project>
