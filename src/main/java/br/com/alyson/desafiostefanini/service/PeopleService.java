@@ -27,7 +27,7 @@ public class PeopleService implements Serializable {
 
         Optional<People> peopleExist = peopleRepository.findByNameIgnoreCaseOrEmailOrCpf(people.getName(), people.getEmail(), people.getCpf());
 
-        if(peopleExist.isPresent()){
+        if(peopleExist.isPresent() && people.getId() == null){
             throw new BusinessException("Já existe uma pessoa com os dados informado.");
         }
 
