@@ -20,8 +20,10 @@
         <spring.boot.starter.data.jpa.version>2.3.2.RELEASE</spring.boot.starter.data.jpa.version>
         <spring.boot.starter.test.version>2.3.2.RELEASE</spring.boot.starter.test.version>
 
+        <!--
         <oracle.jdbc.version>18.3</oracle.jdbc.version>
         <postgresql.version>42.2.14</postgresql.version>
+        -->
         <h2.version>1.4.199</h2.version>
 
         <cdi.api.version>2.0.SP1</cdi.api.version>
@@ -108,20 +110,21 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
+        <!--
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>${oracle.jdbc.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>compile</scope>
         </dependency>
+        -->
 
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
